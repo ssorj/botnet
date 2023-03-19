@@ -1,0 +1,3 @@
+FROM docker.io/linuxserver/ngircd
+
+COPY ngircd.conf /config/ngircd.conf
