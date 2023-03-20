@@ -2,25 +2,25 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: irc-client
-  name: irc-client
+    app: hostbot
+  name: hostbot
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: irc-client
+      app: hostbot
   template:
     metadata:
       labels:
-        app: irc-client
+        app: hostbot
     spec:
       securityContext:
         seccompProfile:
           type: RuntimeDefault
         runAsNonRoot: true
       containers:
-        - name: irc-client
-          image: quay.io/ssorj/botnet-irc-client
+        - name: hostbot
+          image: quay.io/ssorj/botnet-hostbot
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:

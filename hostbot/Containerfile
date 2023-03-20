@@ -6,5 +6,6 @@ RUN addgroup -S fritz && adduser -S fritz -G fritz
 USER fritz
 
 COPY main.py /home/fritz/main.py
+COPY thingid.py /home/fritz/thingid.py
 
 CMD ["/usr/local/bin/python", "/home/fritz/main.py", "irc-server", "#botnet"]

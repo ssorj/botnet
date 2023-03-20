@@ -5,9 +5,13 @@ from irc.bot import SingleServerIRCBot
 import getpass
 import os
 import sys
+import thingid
 import time
 
-class WhichBot(SingleServerIRCBot):
+# import logging
+# logging.basicConfig(level=logging.DEBUG)
+
+class HostBot(SingleServerIRCBot):
     def __init__(self, host, port, channel, nick):
         super().__init__([(host, port)], nick, nick)
 
@@ -15,15 +19,15 @@ class WhichBot(SingleServerIRCBot):
         self.channel = channel
 
     def on_welcome(self, conn, event):
-        print(f"on_welcome {event}")
+        print(f"Event: WELCOME {event}")
 
         conn.join(self.channel)
 
     def on_privmsg(self, conn, event):
-        print(f"on_privmsg {event}")
+        print(f"Event: PRIVMSG {event}")
 
     def on_pubmsg(self, conn, event):
-        print(f"on_pubmsg {event}")
+        print(f"Event: PUBMSG {event}")
 
         text = event.arguments[0]
 
@@ -36,7 +40,7 @@ class WhichBot(SingleServerIRCBot):
         conn.privmsg(self.channel, f"{event.source.nick}, uptime: {get_uptime()}")
 
 def make_nick():
-    return f"{get_user()}-{get_host()}-{get_os()}"[:31]
+    return thingid.generate_thing_id()[:31]
 
 def get_user():
     return getpass.getuser()
@@ -60,7 +64,7 @@ def main():
     try:
         address, channel = sys.argv[1:3]
     except ValueError:
-        exit("Usage: whichbot.py HOST[:PORT] CHANNEL [NICK]")
+        exit("Usage: main.py HOST[:PORT] CHANNEL [NICK]")
 
     try:
         nick = sys.argv[3]
@@ -74,7 +78,9 @@ def main():
 
     port = int(port)
 
-    WhichBot(host, port, channel, nick).start()
+    print(f"Connecting to {host}:{port} and joining {channel} as {nick}")
+
+    HostBot(host, port, channel, nick).start()
 
 if __name__ == "__main__":
     try:
