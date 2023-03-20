@@ -12,6 +12,11 @@ def run_():
     run(f"podman run --rm -p 6667:6667 {image_tag}")
 
 @command
+def login():
+    run("podman login quay.io")
+
+@command
 def push():
     build()
+    login()
     run(f"podman push {image_tag}")
