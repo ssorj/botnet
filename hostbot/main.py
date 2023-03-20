@@ -19,15 +19,15 @@ class HostBot(SingleServerIRCBot):
         self.channel = channel
 
     def on_welcome(self, conn, event):
-        print(f"Event: WELCOME {event}")
+        print(f"Event: {event}")
 
         conn.join(self.channel)
 
     def on_privmsg(self, conn, event):
-        print(f"Event: PRIVMSG {event}")
+        print(f"Event: {event}")
 
     def on_pubmsg(self, conn, event):
-        print(f"Event: PUBMSG {event}")
+        print(f"Event: {event}")
 
         text = event.arguments[0]
 
@@ -37,7 +37,10 @@ class HostBot(SingleServerIRCBot):
     def handle_command(self, conn, event):
         text = event.arguments[0][len(self.nick) + 1:]
 
-        conn.privmsg(self.channel, f"{event.source.nick}, uptime: {get_uptime()}")
+        conn.privmsg(self.channel, f"{event.source.nick}: User:   {get_user()}")
+        conn.privmsg(self.channel, f"{event.source.nick}: Host:   {get_host()}")
+        conn.privmsg(self.channel, f"{event.source.nick}: OS:     {get_os()}")
+        conn.privmsg(self.channel, f"{event.source.nick}: Uptime: {get_uptime()} days")
 
 def make_nick():
     return thingid.generate_thing_id()[:31]
