@@ -2,21 +2,21 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: sqldatabase
-  name: sqldatabase
+    app: sql-database
+  name: sql-database
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: sqldatabase
+      app: sql-database
   template:
     metadata:
       labels:
-        app: sqldatabase
+        app: sql-database
     spec:
       containers:
-        - name: sqldatabase
-          image: quay.io/ssorj/connectathon-sqldatabase
+        - name: sql-database
+          image: quay.io/ssorj/connectathon-sql-database
           ports:
             - containerPort: 5432
 ---
@@ -24,13 +24,13 @@ spec:
 # kind: Service
 # metadata:
 #   labels:
-#     app: sqldatabase
-#   name: sqldatabase
+#     app: sql-database
+#   name: sql-database
 # spec:
 #   ports:
 #   - port: 5432
 #     protocol: TCP
 #     targetPort: 5432
 #   selector:
-#     app: sqldatabase
+#     app: sql-database
 #   type: LoadBalancer

@@ -1,22 +1,18 @@
 from plano import *
 
-image_tag = "quay.io/ssorj/connectathon-ircserver"
+image_tag = "quay.io/ssorj/connectathon-sql-database"
 
 @command
 def build():
+    run(f"gunzip --keep --force dvdrental.tar.gz")
     run(f"podman build -t {image_tag} .")
 
 @command(name="run")
 def run_():
     build()
-    run(f"podman run --rm -p 6667:6667 {image_tag}")
-
-@command
-def login():
-    run("podman login quay.io")
+    run(f"podman run --rm -p 5432:5432 {image_tag}")
 
 @command
 def push():
     build()
-    login()
     run(f"podman push {image_tag}")

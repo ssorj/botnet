@@ -2,20 +2,20 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: ircserver
-  name: ircserver
+    app: irc-server
+  name: irc-server
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ircserver
+      app: irc-server
   template:
     metadata:
       labels:
-        app: ircserver
+        app: irc-server
     spec:
       containers:
-        - name: ircserver
-          image: quay.io/ssorj/connectathon-ircserver
+        - name: irc-server
+          image: quay.io/ssorj/connectathon-irc-server
           ports:
             - containerPort: 6667
