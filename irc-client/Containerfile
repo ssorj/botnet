@@ -9,4 +9,4 @@ COPY --chown=fritz:fritz . /home/fritz/repo
 USER fritz
 WORKDIR /home/fritz/repo
 
-CMD ["/usr/bin/weechat"]
+CMD ["/usr/bin/weechat", "--run-command", "/server add irc-server irc-server; /connect irc-server"]
