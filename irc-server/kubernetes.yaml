@@ -20,7 +20,7 @@ spec:
         runAsNonRoot: true
       containers:
         - name: irc-server
-          image: quay.io/ssorj/connectathon-irc-server
+          image: quay.io/ssorj/botnet-irc-server
           ports:
             - containerPort: 6667
           securityContext:

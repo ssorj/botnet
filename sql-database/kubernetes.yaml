@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: sql-database
-          image: quay.io/ssorj/connectathon-sql-database
+          image: quay.io/ssorj/botnet-sql-database
           ports:
             - containerPort: 5432
 ---

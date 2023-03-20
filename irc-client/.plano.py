@@ -3,8 +3,8 @@ from plano import *
 image_tag = "quay.io/ssorj/botnet-irc-client"
 
 @command
-def build():
-    run(f"podman build -t {image_tag} .")
+def build(no_cache=False):
+    run(f"podman build {'--no-cache' if no_cache else ''} -t {image_tag} .")
 
 @command(name="run")
 def run_():
@@ -17,6 +17,5 @@ def login():
 
 @command
 def push():
-    build()
     login()
     run(f"podman push {image_tag}")
