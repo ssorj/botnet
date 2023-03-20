@@ -14,8 +14,17 @@ spec:
       labels:
         app: irc-server
     spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+        runAsNonRoot: true
       containers:
         - name: irc-server
           image: quay.io/ssorj/connectathon-irc-server
           ports:
             - containerPort: 6667
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL

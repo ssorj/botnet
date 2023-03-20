@@ -1,3 +1,14 @@
-FROM docker.io/linuxserver/ngircd
+FROM docker.io/alpine
 
-COPY ngircd.conf /config/ngircd.conf
+RUN apk add --update --no-cache ngircd
+
+COPY ngircd.conf /etc/ngircd/ngircd.conf
+
+EXPOSE 6667
+
+RUN addgroup -S fritz && adduser -S fritz -G fritz
+COPY --chown=fritz:fritz . /home/fritz/repo
+USER fritz
+WORKDIR /home/fritz/repo
+
+CMD ["/usr/sbin/ngircd", "--nodaemon"]
