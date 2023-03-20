@@ -37,19 +37,19 @@ class HostBot(SingleServerIRCBot):
     def handle_command(self, conn, event):
         text = event.arguments[0][len(self.nick) + 1:]
 
-        conn.privmsg(self.channel, f"{event.source.nick}: User:   {get_user()}")
-        conn.privmsg(self.channel, f"{event.source.nick}: Host:   {get_host()}")
-        conn.privmsg(self.channel, f"{event.source.nick}: OS:     {get_os()}")
-        conn.privmsg(self.channel, f"{event.source.nick}: Uptime: {get_uptime()} days")
+        conn.privmsg(self.channel, f"{event.source.nick}: Hostname: {get_hostname()}")
+        conn.privmsg(self.channel, f"{event.source.nick}: Uptime:   {get_uptime()} days")
+        conn.privmsg(self.channel, f"{event.source.nick}: OS:       {get_os()}")
+        conn.privmsg(self.channel, f"{event.source.nick}: CPU:      {get_cpu()}")
 
 def make_nick():
     return thingid.generate_thing_id()[:31]
 
-def get_user():
-    return getpass.getuser()
-
-def get_host():
+def get_hostname():
     return os.uname().nodename
+
+def get_uptime():
+    return round(time.clock_gettime(time.CLOCK_BOOTTIME) / 86400, 1)
 
 def get_os():
     os_ = os.uname().sysname.lower()
@@ -60,8 +60,10 @@ def get_os():
 
     return os_
 
-def get_uptime():
-    return round(time.clock_gettime(time.CLOCK_BOOTTIME) / 86400, 1)
+def get_cpu():
+    for line in open("/proc/cpuinfo"):
+        if line.startswith("model name"):
+            return line.split(":")[1].strip()
 
 def main():
     try:

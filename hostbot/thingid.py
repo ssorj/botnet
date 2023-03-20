@@ -1,4 +1,5 @@
 import random as _random
+import time as _time
 
 _adjectives = [
     "ace",
@@ -27,11 +28,11 @@ _adjectives = [
     ("clever", "cl"),
     ("clumsy", "cl"),
     ("cool", "k"),
-    ("crabby", "cr"),
-    ("cranky", "cr"),
-    ("creepy", "cr"),
-    ("crucial", "cr"),
-    ("cryptic", "cr"),
+    ("crabby", "kr"),
+    ("cranky", "kr"),
+    ("creepy", "kr"),
+    ("crucial", "kr"),
+    ("cryptic", "kr"),
     "dandy",
     "dazzling",
     "defiant",
@@ -118,10 +119,10 @@ _adjectives = [
     "pioneering",
     "polished",
     "posh",
-    "premium",
-    "priceless",
-    "prime",
-    "primo",
+    ("premium", "pr"),
+    ("priceless", "pr"),
+    ("prime", "pr"),
+    ("primo", "pr"),
     ("quality", "kw"),
     ("queasy", "kw"),
     ("quirky", "kw"),
@@ -174,10 +175,14 @@ _adjectives = [
     ("swell", "sw"),
     ("swift", "sw"),
     "terrific",
+    ("theatrical", "th"),
+    ("theoretical", "th"),
+    ("thinking", "th"),
+    ("thrilling", "th"),
     "tiptop",
     "top-notch",
-    "transcendent",
-    "tremendous",
+    ("transcendent", "tr"),
+    ("tremendous", "tr"),
     "ultimate",
     "unreal",
     "valiant",
@@ -200,13 +205,18 @@ _adjectives = [
 _things = [
     "android",
     "apparatus",
+    "appliance",
     "application",
+    "artifact",
     "automaton",
     "bot",
     "box",
     ("cog", "k"),
     ("component", "k"),
     ("contraption", "k"),
+    ("contrivance", "k"),
+    ("convenience", "k"),
+    ("crank", "kr"),
     "device",
     "dingus",
     "doodad",
@@ -215,23 +225,38 @@ _things = [
     "drone",
     "engine",
     "entity",
+    "function",
     "gadget",
+    "gear",
+    "gimmick",
     "gizmo",
     "hardware",
+    "implement",
     "instrument",
+    "interface",
+    "invention",
     "item",
     "machine",
     "mechanism",
+    "mineral",
     "object",
-    "process",
-    "processor",
-    "program",
+    ("procedure", "pr"),
+    ("process", "pr"),
+    ("processor", "pr"),
+    ("program", "pr"),
+    "rig",
     "robot",
+    "routine",
     "server",
+    ("sku", "sk"),
     "system",
-    # "thing",
-    # "thingamajig",
-    # "thingamabob",
+    ("thingamajig", "th"),
+    ("thingamabob", "th"),
+    "tool",
+    ("trinket", "tr"),
+    "utensil",
+    "utility",
+    "whatsit",
     "widget",
     "worker",
     ("computer", "k"),
@@ -239,33 +264,44 @@ _things = [
     ("unit", "y"),
 ]
 
+_used_ids = set()
+
 def generate_thing_id():
     _random.seed()
 
-    thing = _random.choice(_things)
+    for i in range(10):
+        thing = _random.choice(_things)
 
-    if type(thing) is tuple:
-        thing, thing_initial = thing
-    else:
-        thing_initial = thing[0]
-
-    def match(adjective):
-        if type(adjective) is tuple:
-            adjective, adjective_initial = adjective
+        if type(thing) is tuple:
+            thing, thing_initial = thing
         else:
-            adjective_initial = adjective[0]
+            thing_initial = thing[0]
 
-        return adjective_initial == thing_initial
+        def match(adjective):
+            if type(adjective) is tuple:
+                adjective, adjective_initial = adjective
+            else:
+                adjective_initial = adjective[0]
 
-    try:
-        adjective = _random.choice([x for x in _adjectives if match(x)])
-    except IndexError:
-        adjective = _random.choice(_adjectives)
+            return adjective_initial == thing_initial
 
-    if type(adjective) is tuple:
-        adjective, _ = adjective
+        try:
+            adjective = _random.choice([x for x in _adjectives if match(x)])
+        except IndexError:
+            adjective = _random.choice(_adjectives)
 
-    return "-".join((adjective, thing))
+        if type(adjective) is tuple:
+            adjective, _ = adjective
+
+        thing_id = "-".join((adjective, thing))
+
+        if thing_id in _used_ids:
+            continue
+        else:
+            _used_ids.add(thing_id)
+            break
+
+    return thing_id
 
 if __name__ == "__main__":
     for i in range(100):
