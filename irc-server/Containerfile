@@ -7,8 +7,6 @@ COPY ngircd.conf /etc/ngircd/ngircd.conf
 EXPOSE 6667
 
 RUN addgroup -S fritz && adduser -S fritz -G fritz
-COPY --chown=fritz:fritz . /home/fritz/repo
 USER fritz
-WORKDIR /home/fritz/repo
 
 CMD ["/usr/sbin/ngircd", "--nodaemon"]

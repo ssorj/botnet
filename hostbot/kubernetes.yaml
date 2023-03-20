@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: irc-client
+  name: irc-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: irc-client
+  template:
+    metadata:
+      labels:
+        app: irc-client
+    spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+        runAsNonRoot: true
+      containers:
+        - name: irc-client
+          image: quay.io/ssorj/botnet-irc-client
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
