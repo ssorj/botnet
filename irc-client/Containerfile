@@ -1,0 +1,12 @@
+FROM docker.io/alpine
+
+RUN apk add --update --no-cache weechat
+
+# COPY ngircd.conf /etc/ngircd/ngircd.conf
+
+RUN addgroup -S fritz && adduser -S fritz -G fritz
+COPY --chown=fritz:fritz . /home/fritz/repo
+USER fritz
+WORKDIR /home/fritz/repo
+
+CMD ["/usr/bin/weechat"]
