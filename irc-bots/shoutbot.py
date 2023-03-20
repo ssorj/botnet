@@ -1,8 +1,12 @@
 #!/usr/bin/python
 
+# pip install irc
 from irc.bot import SingleServerIRCBot
 
 import sys
+
+# import logging
+# logging.basicConfig(level=logging.DEBUG)
 
 class ShoutBot(SingleServerIRCBot):
     def __init__(self, host, port, channel, nick):
@@ -12,15 +16,15 @@ class ShoutBot(SingleServerIRCBot):
         self.nick = nick
 
     def on_welcome(self, conn, event):
-        print(f"on_welcome {event}")
+        print(f"Event: {event}")
 
         conn.join(self.channel)
 
     def on_privmsg(self, conn, event):
-        print(f"on_privmsg {event}")
+        print(f"Event: {event}")
 
     def on_pubmsg(self, conn, event):
-        print(f"on_pubmsg {event}")
+        print(f"Event: {event}")
 
         text = event.arguments[0]
 
