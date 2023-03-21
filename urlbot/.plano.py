@@ -1,10 +1,9 @@
 from plano import *
 
-image_tag = "quay.io/ssorj/botnet-sql-database"
+image_tag = "quay.io/ssorj/botnet-urlbot"
 
 @command
 def build(no_cache=False):
-    run(f"gunzip --keep --force dvdrental.tar.gz")
     run(f"podman build {'--no-cache' if no_cache else ''} -t {image_tag} .")
 
 @command(name="run")

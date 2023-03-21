@@ -1,0 +1,10 @@
+FROM docker.io/python:alpine
+
+RUN pip install --no-cache-dir irc requests
+
+RUN addgroup -S fritz && adduser -S fritz -G fritz
+USER fritz
+
+COPY main.py /home/fritz/main.py
+
+CMD ["/usr/local/bin/python", "/home/fritz/main.py", "irc-server", "#urlbot"]

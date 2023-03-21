@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: sqlbot
+  name: sqlbot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sqlbot
+  template:
+    metadata:
+      labels:
+        app: sqlbot
+    spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+        runAsNonRoot: true
+      containers:
+        - name: sqlbot
+          image: quay.io/ssorj/botnet-sqlbot
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL

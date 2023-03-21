@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: urlbot
+  name: urlbot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: urlbot
+  template:
+    metadata:
+      labels:
+        app: urlbot
+    spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+        runAsNonRoot: true
+      containers:
+        - name: urlbot
+          image: quay.io/ssorj/botnet-urlbot
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL

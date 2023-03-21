@@ -1,19 +1,25 @@
 #!/usr/bin/python
 
-from irc.bot import SingleServerIRCBot
+# pip install irc
+# pip install psycopg psycopg_pool
 
+from irc.bot import SingleServerIRCBot
 from psycopg_pool import ConnectionPool
+
 import sys
 
+# import logging
+# logging.basicConfig(level=logging.DEBUG)
+
 database_password = "c66efc1638e111eca22300d861c8e364"
-database_url = f"postgresql://postgres:{database_password}@localhost:5432/dvdrental"
+database_url = f"postgresql://postgres:{database_password}@sql-database:5432/dvdrental"
 
 class SqlBot(SingleServerIRCBot):
     def __init__(self, host, port, channel, nick):
         super().__init__([(host, port)], nick, nick)
 
-        self.channel = channel
         self.nick = nick
+        self.channel = channel
 
         # XXX
         # async def configure(conn):
@@ -22,15 +28,15 @@ class SqlBot(SingleServerIRCBot):
         self.connection_pool = ConnectionPool(database_url)
 
     def on_welcome(self, conn, event):
-        print(f"on_welcome {event}")
+        print(f"Event: {event}")
 
         conn.join(self.channel)
 
     def on_privmsg(self, conn, event):
-        print(f"on_privmsg {event}")
+        print(f"Event: {event}")
 
     def on_pubmsg(self, conn, event):
-        print(f"on_pubmsg {event}")
+        print(f"Event: {event}")
 
         text = event.arguments[0]
 
@@ -40,6 +46,12 @@ class SqlBot(SingleServerIRCBot):
     def handle_command(self, conn, event):
         text = event.arguments[0][len(self.nick) + 1:]
 
+        response_lines = self.send_query(text)
+
+        for line in response_lines:
+            conn.privmsg(self.channel, f"{event.source.nick}: {line}")
+
+    def send_query(self, text):
         with self.connection_pool.connection() as dbconn:
             try:
                 cursor = dbconn.execute(text)
@@ -54,16 +66,13 @@ class SqlBot(SingleServerIRCBot):
                 for row in cursor.fetchall():
                     rows.append(row)
 
-                message = "\n".join([str(x) for x in rows])
-
-            for line in message.split("\n"):
-                conn.privmsg(self.channel, f"{event.source.nick}, {line}")
+        return rows
 
 def main():
     try:
         address, channel = sys.argv[1:3]
     except ValueError:
-        exit("Usage: sqlbot.py HOST[:PORT] CHANNEL [NICK]")
+        exit("Usage: main.py HOST[:PORT] CHANNEL [NICK]")
 
     try:
         nick = sys.argv[3]
@@ -76,6 +85,8 @@ def main():
         host, port = address, 6667
 
     port = int(port)
+
+    print(f"Connecting to {host}:{port} and joining {channel} as {nick}")
 
     SqlBot(host, port, channel, nick).start()
 
