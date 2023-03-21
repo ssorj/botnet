@@ -52,6 +52,8 @@ class SqlBot(SingleServerIRCBot):
             conn.privmsg(self.channel, f"{event.source.nick}: {line}")
 
     def send_query(self, text):
+        rows = []
+
         with self.connection_pool.connection() as dbconn:
             try:
                 cursor = dbconn.execute(text)

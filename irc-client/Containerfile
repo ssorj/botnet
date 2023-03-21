@@ -3,8 +3,6 @@ FROM docker.io/alpine
 RUN apk add --update --no-cache weechat
 
 RUN addgroup -S fritz && adduser -S fritz -G fritz
-COPY --chown=fritz:fritz . /home/fritz/repo
 USER fritz
-WORKDIR /home/fritz/repo
 
 CMD ["/usr/bin/weechat", "--run-command", "/server add irc-server irc-server; /connect irc-server"]
